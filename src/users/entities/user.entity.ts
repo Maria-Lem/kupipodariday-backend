@@ -3,9 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Wish } from '../../wishes/entities/wish.entity';
+import { Offer } from '../../offers/entities/offer.entity';
+import { Wishlist } from '../../wishlists/entities/wishlists.entity';
 
 @Entity()
 export class User {
@@ -49,4 +53,13 @@ export class User {
   @Column()
   @IsString()
   password: string;
+
+  @OneToMany(() => Wish, (wish) => wish.owner)
+  wishes: Wish[];
+
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
+  wishlists: Wishlist[];
 }
