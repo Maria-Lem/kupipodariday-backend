@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { Wish } from './entities/wish.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -72,6 +72,14 @@ export class WishesService {
     });
   }
 
+  async findMany(items: number[]): Promise<Wish[]> {
+    return await this.wishesRepository.find({
+      where: {
+        id: In(items),
+      },
+    });
+  }
+
   async findAll(): Promise<Wish[]> {
     const wishes = await this.wishesRepository.find({
       relations: ['owner', 'offers'],
@@ -100,6 +108,16 @@ export class WishesService {
     }
 
     return await this.wishesRepository.save({ ...wish, ...updateWishDto });
+  }
+
+  async updateWishRaised(wishId: number, newRaised: number): Promise<Wish> {
+    const wish = await this.findWishById(wishId);
+
+    if (!wish) {
+      throw new NotFoundException(WISH_NOT_FOUND);
+    }
+
+    return await this.wishesRepository.save({ ...wish, raised: newRaised });
   }
 
   async deleteWish(wishId: number, userId: number): Promise<Wish> {

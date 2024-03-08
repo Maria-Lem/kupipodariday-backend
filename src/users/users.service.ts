@@ -4,11 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { createHash } from 'src/utils/hash';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { createHash } from 'src/utils/hash';
 import { USER_ALREADY_EXIST, USER_NOT_FOUND } from 'src/utils/constants/users';
 
 @Injectable()
