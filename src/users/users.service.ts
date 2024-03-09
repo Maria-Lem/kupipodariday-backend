@@ -19,7 +19,18 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    return this.userRepository.save({
+    const email = await this.findByEmail(createUserDto.email);
+    const username = await this.findByUsername(createUserDto.username);
+
+    if (email) {
+      throw new ForbiddenException(USER_ALREADY_EXIST);
+    }
+
+    if (username) {
+      throw new ForbiddenException(USER_ALREADY_EXIST);
+    }
+
+    return await this.userRepository.save({
       ...createUserDto,
       password: await createHash(createUserDto.password),
     });
